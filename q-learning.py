@@ -71,8 +71,8 @@ def train_qlearning(params):
 
 def plot_moving_averages(rewards_list, window_size, labels, title):
     plt.figure(figsize=(12, 8))
-    markers = ['o', 'o']  # Different markers for each plot
-    colors = ['b', 'g']  # Color options
+    markers = ['o', 'o']
+    colors = ['b', 'g']
     for rewards, label, marker, color in zip(rewards_list, labels, markers, colors):
         moving_avg_rewards = np.convolve(rewards, np.ones(window_size)/window_size, mode='valid')
         plt.plot(moving_avg_rewards, label=label, marker=marker, linewidth=2, color=color, markevery=1000)
@@ -95,7 +95,6 @@ rewards_dynamic_lr = train_qlearning(params_dynamic_lr)
 
 print(f"Average score over time: \nConstant Learning Rate:{np.mean(rewards_constant_lr)} \nDynamic Learning Rate:{np.mean(rewards_dynamic_lr)}")
 
-# Assuming rewards_constant_lr and rewards_dynamic_lr are already computed
 plot_moving_averages(
     [rewards_constant_lr, rewards_dynamic_lr], 
     window_size, 
