@@ -68,24 +68,49 @@ class MonteCarlo:
 
         return weight
 
-def plot_average_rewards(standard_rewards, is_rewards):
+def plot_learning_curves(mean_rewards_standard, mean_rewards_is, episodes):
+    """
+    Plots learning curves for standard and importance sampling Monte Carlo methods.
+    
+    Parameters:
+    - mean_rewards_standard: List of mean rewards per episode for standard MC across all trials.
+    - mean_rewards_is: List of mean rewards per episode for MC with importance sampling across all trials.
+    - episodes: Total number of episodes.
+    """
     plt.figure(figsize=(10, 5))
-    episodes = np.arange(len(standard_rewards))
-    plt.plot(episodes, standard_rewards, label='Standard MC')
-    plt.plot(episodes, is_rewards, label='MC with Importance Sampling')
-    plt.title("Average Reward Over Time")
-    plt.xlabel("Episode (x100)")
+    
+    plt.plot(mean_rewards_standard, label='Standard MC', alpha=0.75)
+    plt.plot(mean_rewards_is, label='MC with Importance Sampling', alpha=0.75)
+
+    plt.title("Learning Curves for Monte Carlo Methods")
+    plt.xlabel("Episode")
     plt.ylabel("Average Reward")
     plt.legend()
     plt.grid(True)
     plt.show()
 
-# Example usage
-env = gym.make('FrozenLake-v1', desc=None, map_name="4x4", is_slippery=False)
-standard_mc_agent = MonteCarlo(env, importance_sampling=False)
-is_mc_agent = MonteCarlo(env, importance_sampling=True)
 
-standard_rewards = standard_mc_agent.train()
-is_rewards = is_mc_agent.train()
+def run_multiple_trials(env_name, trials=30, importance_sampling=False):
+    all_episode_rewards = []
 
-plot_average_rewards(standard_rewards, is_rewards)
+    for trial in range(trials):
+        env = gym.make(env_name, desc=None, map_name="4x4", is_slippery=False)
+        agent = MonteCarlo(env, importance_sampling=importance_sampling)
+        episode_rewards = agent.train()
+        all_episode_rewards.append(episode_rewards)
+
+    mean_rewards_per_episode = np.mean(all_episode_rewards, axis=0)
+    std_reward = np.std(all_episode_rewards)
+    return mean_rewards_per_episode, std_reward, all_episode_rewards 
+
+env_name = 'FrozenLake-v1'
+trials = 2
+
+mean_rewards_standard, std_standard, total_standard = run_multiple_trials(env_name, trials, importance_sampling=False)
+mean_rewards_is, std_is, total_is = run_multiple_trials(env_name, trials, importance_sampling=True)
+
+plot_learning_curves(mean_rewards_standard, mean_rewards_is, 50000)
+
+print(f"Standard MC: STD = {std_standard}")
+print(f"MC with Importance Sampling: STD = {std_is}")
+
