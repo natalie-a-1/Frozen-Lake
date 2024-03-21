@@ -98,7 +98,7 @@ def plot_learning_curves(mean_rewards_standard, mean_rewards_is, window_size=100
     if smoothed_is:
         plt.plot(episodes_is, smoothed_is, label='MC with Importance Sampling', alpha=0.75)
 
-    plt.title("Smoothed Learning Curves for Monte Carlo Methods")
+    plt.title("Monte Carlo Learning Curves")
     plt.xlabel("Episode")
     plt.ylabel("Average Reward (Smoothed)")
     plt.legend()
@@ -120,7 +120,7 @@ def run_multiple_trials(env_name, trials=30, importance_sampling=False):
     return mean_rewards_per_episode, std_reward, all_episode_rewards 
 
 env_name = 'FrozenLake-v1'
-trials = 5
+trials = 30
 
 mean_rewards_standard, std_standard, total_standard = run_multiple_trials(env_name, trials, importance_sampling=False)
 mean_rewards_is, std_is, total_is = run_multiple_trials(env_name, trials, importance_sampling=True)
@@ -128,5 +128,7 @@ mean_rewards_is, std_is, total_is = run_multiple_trials(env_name, trials, import
 plot_learning_curves(mean_rewards_standard, mean_rewards_is, window_size=100)
 
 print(f"Standard MC: STD = {std_standard}")
+print(f"Mean: {np.mean(mean_rewards_standard)}")
 print(f"MC with Importance Sampling: STD = {std_is}")
+print(f"Mean: {np.mean(mean_rewards_is)}")
 

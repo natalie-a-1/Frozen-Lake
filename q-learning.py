@@ -69,7 +69,12 @@ def train_qlearning(params, runs=30):
         all_rewards.append(rewards)
 
     rewards_mean = np.mean(all_rewards, axis=0)
-    rewards_std = np.std(all_rewards, axis=0)
+    if runs > 1:
+        # Calculate std across runs (makes sense only if runs > 1)
+        rewards_std = np.std(np.mean(all_rewards, axis=1))  # Std dev of average rewards per run
+    else:
+        # Calculate std across episodes in the single run
+        rewards_std = np.std(all_rewards) 
     return rewards_mean, rewards_std
 
 def plot_learning_curves(mean_rewards, labels, title):
@@ -99,14 +104,16 @@ params_constant_lr = QLearningParams(use_dynamic_lr=False)
 
 params_dynamic_lr = QLearningParams(use_dynamic_lr=True)
 
-rewards_mean_constant_lr, _ = train_qlearning(params_constant_lr, runs=6)
-rewards_mean_dynamic_lr, _ = train_qlearning(params_dynamic_lr, runs=6)
+rewards_mean_constant_lr, constant_std = train_qlearning(params_constant_lr, runs=30)
+rewards_mean_dynamic_lr, dynamic_std = train_qlearning(params_dynamic_lr, runs=30)
 
 print("Q-Learning with Constant Learning Rate:")
 print(f"Average Reward: {np.mean(rewards_mean_constant_lr)}")
+print(f"STD: {constant_std}")
 
 print("Q-Learning with Dynamic Learning Rate:")
 print(f"Average Reward: {np.mean(rewards_mean_dynamic_lr)}\n")
+print(f"STD: {dynamic_std}")
 
 smoothed_constant_lr = smooth_rewards(rewards_mean_constant_lr, window_size=100)
 smoothed_dynamic_lr = smooth_rewards(rewards_mean_dynamic_lr, window_size=100)
