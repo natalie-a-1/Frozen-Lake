@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 
 class QLearningParams:
     def __init__(self, use_dynamic_lr=False):
-        self.total_episodes = 25000
+        self.total_episodes = 15000
         self.learning_rate_init = 0.8  # Only for dynamic LR
         self.learning_rate = 0.8  # Constant learning rate
         self.learning_rate_min = 0.01  # Only for dynamic LR
         self.learning_rate_decay = 0.001  # Only for dynamic LR
         self.max_steps = 100
         self.discount_factor = 0.95
-        self.epsilon = 1.0
-        self.max_epsilon = 1.0
+        self.epsilon = 0.9
+        self.max_epsilon = 0.9
         self.min_epsilon = 0.01
         self.decay_rate = 0.001
         self.use_dynamic_learning_rate = use_dynamic_lr
@@ -86,6 +86,7 @@ def plot_learning_curves(mean_rewards, labels, title):
     plt.title(title, fontsize=16)
     plt.legend(loc='upper left')
     plt.grid(True)
+    plt.xlim([0,10000])
     plt.show()
 
 def smooth_rewards(rewards, window_size=100):
@@ -121,5 +122,5 @@ smoothed_dynamic_lr = smooth_rewards(rewards_mean_dynamic_lr, window_size=100)
 plot_learning_curves(
     [smoothed_constant_lr, smoothed_dynamic_lr],
     ['Constant Learning Rate', 'Dynamic Learning Rate'],
-    'Q-Learning Training Progress Comparison'
+    'Q-Learning: Average Rewards vs Episodes'
 )

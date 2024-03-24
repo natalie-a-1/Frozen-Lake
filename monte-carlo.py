@@ -4,7 +4,7 @@ import random
 import matplotlib.pyplot as plt
 
 class MonteCarlo:
-    def __init__(self, env, gamma=0.9, max_episodes=50000, epsilon=1.0, decay_rate=0.001, min_epsilon=0.01, importance_sampling=False):
+    def __init__(self, env, gamma=0.8, max_episodes=15000, epsilon=0.9, decay_rate=0.001, min_epsilon=0.01, importance_sampling=False):
         self.env = env
         self.gamma = gamma
         self.max_episodes = max_episodes
@@ -98,7 +98,7 @@ def plot_learning_curves(mean_rewards_standard, mean_rewards_is, window_size=100
     if smoothed_is:
         plt.plot(episodes_is, smoothed_is, label='MC with Importance Sampling', alpha=0.75)
 
-    plt.title("Monte Carlo Learning Curves")
+    plt.title("Monte Carlo: Average Rewards vs Episodes")
     plt.xlabel("Episode")
     plt.ylabel("Average Reward (Smoothed)")
     plt.legend()
