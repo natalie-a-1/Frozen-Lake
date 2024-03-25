@@ -105,7 +105,7 @@ def calculate_statistics(rewards):
     success_rate = sum(r > 0 for r in rewards) / len(rewards)
     return average_reward, std_dev_reward, success_rate
 
-# Main execution and statistics calculation
+# Main
 env = gym.make('FrozenLake-v1', is_slippery=True)
 optimal_policy_standard, _, deltas_standard, time_standard = policy_iteration(env)
 optimal_policy_prioritized, _, deltas_prioritized, time_prioritized = policy_iteration(env, prioritized=True)
